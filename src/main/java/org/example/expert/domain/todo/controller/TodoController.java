@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.expert.domain.common.annotation.Auth;
 import org.example.expert.domain.common.dto.AuthUser;
+import org.example.expert.domain.todo.dto.request.SearchRequest;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
@@ -31,11 +32,9 @@ public class TodoController {
     public ResponseEntity<Page<TodoResponse>> getTodos(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String weather,
-            @RequestParam(required = false) String startAt,
-            @RequestParam(required = false) String endAt
+            @Valid @ModelAttribute SearchRequest searchRequest
     ) {
-        return ResponseEntity.ok(todoService.getTodos(page, size, weather, startAt, endAt));
+        return ResponseEntity.ok(todoService.getTodos(page, size, searchRequest));
     }
 
     @GetMapping("/todos/{todoId}")

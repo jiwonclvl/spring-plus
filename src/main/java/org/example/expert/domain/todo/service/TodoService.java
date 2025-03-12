@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.expert.client.WeatherClient;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
+import org.example.expert.domain.todo.dto.request.SearchRequest;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
@@ -59,7 +61,7 @@ public class TodoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<TodoResponse> getTodos(int page, int size, String weather, String startAt, String endAt) {
+    public Page<TodoResponse> getTodos(int page, int size, SearchRequest searchRequest) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
 
@@ -68,17 +70,15 @@ public class TodoService {
         LocalDateTime formatEndAt = null;
 
         //시작 기간이 입력된 경우
-        if (StringUtils.hasText(startAt)) {
-            LocalDate formatDateTimeStartAt = LocalDate.parse(startAt, DateTimeFormatter.ISO_LOCAL_DATE);
-            formatStartAt = formatDateTimeStartAt.atStartOfDay(); //LocalDate -> LocalDateTime으로 변경하기
+        if (!ObjectUtils.isEmpty(searchRequest.getStartAt()) ) {
+            formatStartAt = searchRequest.getStartAt().atStartOfDay();
         }
         //끝 기간이 입력된 경우
-        if (StringUtils.hasText(endAt)) {
-            LocalDate formatDateTimeEndAt = LocalDate.parse(endAt, DateTimeFormatter.ISO_LOCAL_DATE);
-            formatEndAt = formatDateTimeEndAt.atTime(LocalTime.MAX);
+        if (!ObjectUtils.isEmpty(searchRequest.getEndAt())) {
+            formatEndAt = searchRequest.getEndAt().atTime(LocalTime.MAX);
         }
 
-        Page<Todo> todos = todoRepository.findAllByOrderByModifiedAtDesc(weather,formatStartAt, formatEndAt, pageable);
+        Page<Todo> todos = todoRepository.findAllByOrderByModifiedAtDesc(searchRequest.getWeather(),formatStartAt, formatEndAt, pageable);
 
         return todos.map(todo -> new TodoResponse(
                 todo.getId(),
