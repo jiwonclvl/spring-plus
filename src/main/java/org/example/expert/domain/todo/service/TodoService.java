@@ -1,6 +1,5 @@
 package org.example.expert.domain.todo.service;
 
-import ch.qos.logback.core.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.expert.client.WeatherClient;
@@ -14,19 +13,15 @@ import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Service
@@ -93,6 +88,7 @@ public class TodoService {
 
     @Transactional(readOnly = true)
     public TodoResponse getTodo(long todoId) {
+
         Todo todo = todoRepository.findByIdWithUser(todoId)
                 .orElseThrow(() -> new InvalidRequestException("Todo not found"));
 
