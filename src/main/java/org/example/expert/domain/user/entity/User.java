@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.entity.Timestamped;
 import org.example.expert.domain.user.enums.UserRole;
+import org.springframework.security.core.GrantedAuthority;
 
 @Getter
 @Entity
@@ -39,7 +40,9 @@ public class User extends Timestamped {
     }
 
     public static User fromAuthUser(AuthUser authUser) {
-        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
+        //GrantedAuthority타입의 유저 권한 변환
+        GrantedAuthority authorities = authUser.getAuthorities().iterator().next();
+        return new User(authUser.getId(), authUser.getEmail(), UserRole.of(authorities.getAuthority()));
     }
 
     public void changePassword(String password) {
