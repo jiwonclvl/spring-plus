@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -43,7 +45,9 @@ class TodoControllerTest {
         long todoId = 1L;
         String title = "title";
 
-        AuthUser authUser = new AuthUser(1L, "email", UserRole.ROLE_USER);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+
         User user = User.fromAuthUser(authUser);
 
         UserResponse userResponse = new UserResponse(user.getId(), user.getEmail());
