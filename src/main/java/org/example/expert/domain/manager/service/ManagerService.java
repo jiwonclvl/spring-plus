@@ -29,6 +29,14 @@ public class ManagerService {
     private final UserRepository userRepository;
     private final TodoRepository todoRepository;
 
+    /**
+     * 담장자 등록 비지니스 로직 수행
+     *
+     * @param authUser (유저 Id, email, authorities)
+     * @param todoId (일정 Id)
+     * @param managerSaveRequest (managerUserId)
+     * @return ManagerSaveResponse (id, user)
+     */
     @Transactional
     public ManagerSaveResponse saveManager(AuthUser authUser, long todoId, ManagerSaveRequest managerSaveRequest) {
         // 일정을 만든 유저
@@ -56,6 +64,13 @@ public class ManagerService {
         );
     }
 
+    /**
+     * 담당자로 등록된 유저 전체 조회 로직 수행
+     *
+     * @param todoId (일정 Id)
+     * @return List<ManagerResponse> (id, user)
+     */
+    @Transactional(readOnly = true)
     public List<ManagerResponse> getManagers(long todoId) {
         Todo todo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new InvalidRequestException("Todo not found"));
@@ -73,6 +88,13 @@ public class ManagerService {
         return dtoList;
     }
 
+    /**
+     * 담장자 제거 로직 수행
+     *
+     * @param authUser (유저 Id, email, authorities)
+     * @param todoId (일정 Id)
+     * @param managerId (담당자 Id)
+     */
     @Transactional
     public void deleteManager(AuthUser authUser, long todoId, long managerId) {
         User user = User.fromAuthUser(authUser);

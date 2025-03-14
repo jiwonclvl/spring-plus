@@ -22,6 +22,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    //댓글 등록
     @PostMapping("/todos/{todoId}/comments")
     public ResponseEntity<CommentSaveResponse> saveComment(
             @AuthenticationPrincipal AuthUser authUser,
@@ -31,6 +32,7 @@ public class CommentController {
         return ResponseEntity.ok(commentService.saveComment(authUser, todoId, commentSaveRequest));
     }
 
+    //댓글 전체 조회
     @GetMapping("/todos/{todoId}/comments")
     public ResponseEntity<List<CommentResponse>> getComments(@PathVariable long todoId) {
         return ResponseEntity.ok(commentService.getComments(todoId));

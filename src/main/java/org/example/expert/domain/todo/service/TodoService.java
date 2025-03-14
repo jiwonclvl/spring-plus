@@ -32,6 +32,13 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final WeatherClient weatherClient;
 
+    /**
+     * 일정 등록 비즈니스 로직 수행
+     *
+     * @param authUser (userId, email, authorities)
+     * @param todoSaveRequest (title, contents)
+     * @return TodoSaveResponse (id, title, contents, weather, user)
+     */
     @Transactional
     public TodoSaveResponse saveTodo(AuthUser authUser, TodoSaveRequest todoSaveRequest) {
         User user = User.fromAuthUser(authUser);
@@ -55,6 +62,13 @@ public class TodoService {
         );
     }
 
+    /**
+     *
+     * @param page (현재 페이지)
+     * @param size (페이즈 크기)
+     * @param searchRequest (weather, startAt, endAt)
+     * @return Page<TodoResponse> (id, title, contents, weather, user, createdAt, modifiedAt)
+     */
     @Transactional(readOnly = true)
     public Page<TodoResponse> getTodos(int page, int size, SearchRequest searchRequest) {
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -86,6 +100,12 @@ public class TodoService {
         ));
     }
 
+    /**
+     * 일정 단건 조회 로직 수행
+     *
+     * @param todoId (일정 아이디)
+     * @return TodoResponse (id, title, contents, weather, user, createdAt, modifiedAt)
+     */
     @Transactional(readOnly = true)
     public TodoResponse getTodo(long todoId) {
 

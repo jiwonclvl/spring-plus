@@ -26,6 +26,14 @@ public class CommentService {
     private final TodoRepository todoRepository;
     private final CommentRepository commentRepository;
 
+    /**
+     * 댓글 등록
+     *
+     * @param authUser (유저 Id, email, authorities)
+     * @param todoId (일정 Id)
+     * @param commentSaveRequest (contents)
+     * @return CommentSaveResponse (id, contents, user)
+     */
     @Transactional
     public CommentSaveResponse saveComment(AuthUser authUser, long todoId, CommentSaveRequest commentSaveRequest) {
         User user = User.fromAuthUser(authUser);
@@ -47,6 +55,13 @@ public class CommentService {
         );
     }
 
+    /**
+     * 댓글 전체 조회
+     *
+     * @param todoId (일정 Id)
+     * @return List<CommentResponse> (id, contents, user)
+     */
+    @Transactional(readOnly = true)
     public List<CommentResponse> getComments(long todoId) {
         List<Comment> commentList = commentRepository.findByTodoIdWithUser(todoId);
 

@@ -16,6 +16,11 @@ public class UserAdminController {
 
     private final UserAdminService userAdminService;
 
+    /**
+     * 유저 권한 변경
+     *
+     * UserRole.Authority.ADMIN인 경우에만 기능 수행 가능
+     */
     @Secured(UserRole.Authority.ADMIN)
     @PatchMapping("/admin/users/{userId}")
     public void changeUserRole(@PathVariable long userId, @RequestBody UserRoleChangeRequest userRoleChangeRequest) {

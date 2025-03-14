@@ -15,6 +15,11 @@ public class UserAdminService {
 
     private final UserRepository userRepository;
 
+    /**
+     *
+     * @param userId (유저 아이디)
+     * @param userRoleChangeRequest (userRole)
+     */
     @Transactional
     public void changeUserRole(long userId, UserRoleChangeRequest userRoleChangeRequest) {
         User user = userRepository.findById(userId).orElseThrow(() -> new InvalidRequestException("User not found"));

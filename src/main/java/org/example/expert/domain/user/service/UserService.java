@@ -18,11 +18,24 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * 유저 조회 로직 수행
+     *
+     * @param userId (유저 아이디)
+     * @return UserResponse (id, email)
+     */
+    @Transactional(readOnly = true)
     public UserResponse getUser(long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new InvalidRequestException("User not found"));
         return new UserResponse(user.getId(), user.getEmail());
     }
 
+    /**
+     * 유저 비밀번호 변경 로직 수행
+     *
+     * @param userId (유저 아이디)
+     * @param userChangePasswordRequest (oldPassword, newPassword)
+     */
     @Transactional
     public void changePassword(long userId, UserChangePasswordRequest userChangePasswordRequest) {
         validateNewPassword(userChangePasswordRequest);
@@ -40,6 +53,7 @@ public class UserService {
 
         user.changePassword(passwordEncoder.encode(userChangePasswordRequest.getNewPassword()));
     }
+
 
     private static void validateNewPassword(UserChangePasswordRequest userChangePasswordRequest) {
         if (userChangePasswordRequest.getNewPassword().length() < 8 ||

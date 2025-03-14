@@ -24,6 +24,12 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
+    /**
+     * 회원가입 비지니스 로직 수행
+     *
+     * @param signupRequest (nickname, email, password, userRole)
+     * @return SignupResponse(bearerToken)
+     */
     @Transactional
     public SignupResponse signup(SignupRequest signupRequest) {
 
@@ -48,6 +54,12 @@ public class AuthService {
         return new SignupResponse(bearerToken);
     }
 
+    /**
+     * 로그인 비지니스 로직 수행
+     *
+     * @param signinRequest (email, password)
+     * @return SigninResponse(bearerToken)
+     */
     public SigninResponse signin(SigninRequest signinRequest) {
         User user = userRepository.findByEmail(signinRequest.getEmail()).orElseThrow(
                 () -> new InvalidRequestException("가입되지 않은 유저입니다."));

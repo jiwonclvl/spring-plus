@@ -20,6 +20,7 @@ public class ManagerController {
 
     private final ManagerService managerService;
 
+    //담당자 등록
     @PostMapping("/todos/{todoId}/managers")
     public ResponseEntity<ManagerSaveResponse> saveManager(
             @AuthenticationPrincipal AuthUser authUser,
@@ -29,11 +30,13 @@ public class ManagerController {
         return ResponseEntity.ok(managerService.saveManager(authUser, todoId, managerSaveRequest));
     }
 
+    //담장자로 등록된 유저 전체 조회
     @GetMapping("/todos/{todoId}/managers")
     public ResponseEntity<List<ManagerResponse>> getMembers(@PathVariable long todoId) {
         return ResponseEntity.ok(managerService.getManagers(todoId));
     }
 
+    //담당자 삭제
     @DeleteMapping("/todos/{todoId}/managers/{managerId}")
     public void deleteManager(
             @AuthenticationPrincipal AuthUser authUser,

@@ -21,6 +21,11 @@ public class TodoController {
 
     private final TodoService todoService;
 
+    /**
+     * 일정 등록
+     *
+     * @param authUser (@AuthenticationPrincipal를 통해 인증된 유저 정보 가져오기)
+     */
     @PostMapping("/todos")
     public ResponseEntity<TodoSaveResponse> saveTodo(
             @AuthenticationPrincipal AuthUser authUser,
@@ -29,6 +34,7 @@ public class TodoController {
         return ResponseEntity.ok(todoService.saveTodo(authUser, todoSaveRequest));
     }
 
+    // 일정 전체 조회
     @GetMapping("/todos")
     public ResponseEntity<Page<TodoResponse>> getTodos(
             @RequestParam(defaultValue = "1") int page,
@@ -38,6 +44,7 @@ public class TodoController {
         return ResponseEntity.ok(todoService.getTodos(page, size, searchRequest));
     }
 
+    //일정 조회
     @GetMapping("/todos/{todoId}")
     public ResponseEntity<TodoResponse> getTodo(@PathVariable long todoId) {
         return ResponseEntity.ok(todoService.getTodo(todoId));
