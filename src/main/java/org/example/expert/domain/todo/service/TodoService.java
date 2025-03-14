@@ -7,21 +7,26 @@ import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.todo.dto.request.SearchRequest;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
+import org.example.expert.domain.todo.dto.request.TodoSearchRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
+import org.example.expert.domain.todo.dto.response.TodoSearchResponse;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -98,6 +103,36 @@ public class TodoService {
                 todo.getCreatedAt(),
                 todo.getModifiedAt()
         ));
+    }
+
+    /**
+     * 검색 기능을 통한 일정의 제목, 담당자 수, 댓글 수를 조회하는 로직 수행
+     *
+     * @param page (현재 페이지)
+     * @param size (페이지 사이즈)
+     * @param todoSearchRequest (title,startAt, endAt, nickname)
+     * @return Page<TodoSearchResponse> (title, countManager, countComment)
+     */
+    @Transactional(readOnly = true)
+    public Page<TodoSearchResponse> searchTodos(int page, int size, TodoSearchRequest todoSearchRequest) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        LocalDate startAt = todoSearchRequest.getStartAt();
+        LocalDate endAt = todoSearchRequest.getEndAt();
+
+        //시작 기간이 입력되지 않은 경우
+        if (ObjectUtils.isEmpty(startAt) ) {
+            startAt = LocalDate.MIN;
+        }
+        //끝 기간이 입력되지 않은 경우
+        if (ObjectUtils.isEmpty(endAt)) {
+            endAt = LocalDate.now();
+        }
+
+        LocalDateTime formatStartAt = startAt.atStartOfDay();
+        LocalDateTime formatEndAt = endAt.atTime(LocalTime.MAX);
+
+        return todoRepository.searchTodosByFilters(todoSearchRequest.getTitle(), formatStartAt, formatEndAt, todoSearchRequest.getNickname(), pageable);
     }
 
     /**

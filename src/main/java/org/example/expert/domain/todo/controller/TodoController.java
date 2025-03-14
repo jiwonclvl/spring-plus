@@ -2,13 +2,13 @@ package org.example.expert.domain.todo.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.example.expert.domain.common.annotation.Auth;
 import org.example.expert.domain.common.dto.AuthUser;
+import org.example.expert.domain.todo.dto.request.TodoSearchRequest;
 import org.example.expert.domain.todo.dto.request.SearchRequest;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
+import org.example.expert.domain.todo.dto.response.TodoSearchResponse;
 import org.example.expert.domain.todo.service.TodoService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +42,16 @@ public class TodoController {
             @Valid @ModelAttribute SearchRequest searchRequest
     ) {
         return ResponseEntity.ok(todoService.getTodos(page, size, searchRequest));
+    }
+
+    //QueryDsl을 사용한 일정 검색 기능
+    @GetMapping("/todos/search")
+    public ResponseEntity<Page<TodoSearchResponse>> searchTodos(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @ModelAttribute TodoSearchRequest todoSearchRequest
+    ) {
+        return ResponseEntity.ok(todoService.searchTodos(page, size, todoSearchRequest));
     }
 
     //일정 조회
