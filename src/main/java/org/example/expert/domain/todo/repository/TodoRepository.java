@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 
-public interface TodoRepository extends JpaRepository<Todo, Long>, TodoCustomRepository {
+public interface TodoRepository extends JpaRepository<Todo, Long>, TodoRepositoryCustom {
 
     @EntityGraph(attributePaths = {"user"})
     @Query("SELECT t FROM Todo t " +

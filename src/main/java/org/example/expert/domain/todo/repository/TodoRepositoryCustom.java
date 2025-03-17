@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 
-public interface TodoCustomRepository {
+public interface TodoRepositoryCustom {
     Optional<Todo> findByIdWithUser(Long todoId);
 
     Page<TodoSearchResponse> searchTodosByFilters(String title, LocalDateTime startAt, LocalDateTime endAt, String nickname, Pageable pageable);

@@ -2,6 +2,8 @@ package org.example.expert.domain.todo.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +23,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-
 @Repository
 @RequiredArgsConstructor
-public class TodoCustomRepositoryImpl implements TodoCustomRepository{
+public class TodoRepositoryCustomImpl implements TodoRepositoryCustom {
 
-    private final JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public Optional<Todo> findByIdWithUser(Long todoId) {
         QTodo qTodo = QTodo.todo;
         QUser qUser = QUser.user;
 
-        return Optional.ofNullable(jpaQueryFactory
+        return Optional.ofNullable(queryFactory
                 .selectFrom(qTodo)
                 .leftJoin(qTodo.user,qUser).fetchJoin()
                 .where(qTodo.id.eq(todoId))
@@ -46,19 +47,26 @@ public class TodoCustomRepositoryImpl implements TodoCustomRepository{
         QManager qManager = QManager.manager;
         QComment qComment = QComment.comment;
 
+        JPQLQuery<Long> manageCount = JPAExpressions
+                .select(qManager.count())
+                .from(qManager)
+                .where(qTodo.id.eq(qManager.todo.id));
 
-        List<TodoSearchResponse> findTodos = jpaQueryFactory
-                .select(Projections.constructor(TodoSearchResponse.class,
+        JPQLQuery<Long> commentCount = JPAExpressions
+                .select(qComment.count())
+                .from(qComment)
+                .where(qTodo.id.eq(qComment.todo.id));
+
+        List<TodoSearchResponse> findTodos = queryFactory
+                .select(Projections.constructor(
+                        TodoSearchResponse.class,
                         qTodo.title,
-                        qManager.count(),
-                        qComment.count())
-                )
+                        manageCount,
+                        commentCount
+                ))
                 .from(qTodo)
-                .leftJoin(qTodo.managers, qManager)
-                .leftJoin(qTodo.comments, qComment)
-                .groupBy(qTodo)
                 .where(
-                        searchTitle(title),
+                        titleContains(title),
                         searchNickname(nickname),
                         qTodo.createdAt.between(startAt, endAt)
                 )
@@ -68,24 +76,23 @@ public class TodoCustomRepositoryImpl implements TodoCustomRepository{
                 .fetch();
 
         // 전체 데이터의 수 구하기
-        JPAQuery<Todo> countQuery = jpaQueryFactory
-                .selectFrom(qTodo)
-                .leftJoin(qTodo.managers, qManager)
-                .leftJoin(qTodo.comments, qComment)
+        JPAQuery<Long> countQuery = queryFactory
+                .select(qTodo.count())
+                .from(qTodo)
                 .where(
-                        searchTitle(title),
+                        titleContains(title),
                         searchNickname(nickname),
                         qTodo.createdAt.between(startAt, endAt)
                 );
 
-        return PageableExecutionUtils.getPage(findTodos, pageable, () -> countQuery.fetch().size());
+        return PageableExecutionUtils.getPage(findTodos, pageable, countQuery::fetchOne);
     }
 
-    private BooleanExpression searchTitle(String title) {
-        return StringUtils.hasText(title) ? QTodo.todo.title.likeIgnoreCase("%" + title + "%") : null;
+    private BooleanExpression titleContains(String title) {
+        return StringUtils.hasText(title) ? QTodo.todo.title.containsIgnoreCase(title) : null;
     }
 
     private BooleanExpression searchNickname(String nickname) {
-        return StringUtils.hasText(nickname) ? QTodo.todo.user.nickname.likeIgnoreCase("%" + nickname + "%") : null;
+        return StringUtils.hasText(nickname) ? QTodo.todo.user.nickname.containsIgnoreCase(nickname) : null;
     }
 }
