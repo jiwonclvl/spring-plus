@@ -38,3 +38,12 @@ out/
 
 ### properties ###
 *.properties
+
+# docker-compose.yml 숨기기
+docker-compose.yml
+
+# Dockerfile 숨기기
+Dockerfile
+
+# application.yml 숨기기
+application.yml
