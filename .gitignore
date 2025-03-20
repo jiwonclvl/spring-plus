@@ -40,7 +40,7 @@ out/
 *.properties
 
 # docker-compose.yml 숨기기
-docker-compose.yml
+compose.yml
 
 # Dockerfile 숨기기
 Dockerfile
