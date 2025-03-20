@@ -20,6 +20,9 @@ public class User extends Timestamped {
     //User nickname 추가
     private String nickname;
 
+    //User imageUrl
+    private String imageUrl;
+
     @Column(unique = true)
     private String email;
     private String password;
@@ -51,5 +54,9 @@ public class User extends Timestamped {
 
     public void updateRole(UserRole userRole) {
         this.userRole = userRole;
+    }
+
+    public void updateImage(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

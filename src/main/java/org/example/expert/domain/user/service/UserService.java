@@ -1,9 +1,12 @@
 package org.example.expert.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.dto.request.UserChangePasswordRequest;
+import org.example.expert.domain.user.dto.request.UserImageUrlRequest;
 import org.example.expert.domain.user.dto.response.UserResponse;
+import org.example.expert.domain.user.dto.response.UserWithImageResponse;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,6 +57,21 @@ public class UserService {
         user.changePassword(passwordEncoder.encode(userChangePasswordRequest.getNewPassword()));
     }
 
+    /**
+     *
+     * @param userId (유저 아이디)
+     * @param userImageUrlRequest (imageUrl)
+     * @return UserWithImageResponse (imageUrl)
+     */
+    @Transactional
+    public UserWithImageResponse saveUserProfileImage(Long userId, UserImageUrlRequest userImageUrlRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new InvalidRequestException("User Not Found"));
+
+        user.updateImage(userImageUrlRequest.getImageUrl());
+
+        return new UserWithImageResponse(user.getImageUrl());
+    }
 
     private static void validateNewPassword(UserChangePasswordRequest userChangePasswordRequest) {
         if (userChangePasswordRequest.getNewPassword().length() < 8 ||
