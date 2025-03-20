@@ -25,6 +25,7 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+application.yml
 
 ### NetBeans ###
 /nbproject/private/
@@ -45,5 +46,3 @@ compose.yml
 # Dockerfile 숨기기
 Dockerfile
 
-# application.yml 숨기기
-application.yml
