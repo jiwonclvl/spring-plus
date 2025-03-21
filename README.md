@@ -8,7 +8,7 @@ fork : https://github.com/f-api/spring-plus
 
 <br>
 
-## 트러블 슈팅
+## 과제 풀이 과정
 
 - **필수 과제 과정**
 
@@ -21,6 +21,7 @@ fork : https://github.com/f-api/spring-plus
 - **도전 과제 과정**
 
     - [[과제 과정] QueryDsl (group by, subquery, 성능) 사용 방법](https://velog.io/@clvl1004/%EA%B3%BC%EC%A0%9C-%EA%B3%BC%EC%A0%95-QueryDsl-group-by-subquery)
+    - [[과제 과정] Security 구현 과정 (@WithMockAuthUser 커스텀)](https://velog.io/@clvl1004/%EA%B3%BC%EC%A0%9C-%EA%B3%BC%EC%A0%95-Security-%EA%B5%AC%ED%98%84-%EA%B3%BC%EC%A0%95-WithMockAuthUser-%EC%BB%A4%EC%8A%A4%ED%85%80)
     - Transactional 심화 추가 예정
     - EC2 과정 추가 예정
     - RDS 과정 추가 예정
