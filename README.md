@@ -22,7 +22,7 @@ fork : https://github.com/f-api/spring-plus
 
     - [[과제 과정] QueryDsl (group by, subquery, 성능) 사용 방법](https://velog.io/@clvl1004/%EA%B3%BC%EC%A0%9C-%EA%B3%BC%EC%A0%95-QueryDsl-group-by-subquery)
     - [[과제 과정] Security 구현 과정 (@WithMockAuthUser 커스텀)](https://velog.io/@clvl1004/%EA%B3%BC%EC%A0%9C-%EA%B3%BC%EC%A0%95-Security-%EA%B5%AC%ED%98%84-%EA%B3%BC%EC%A0%95-WithMockAuthUser-%EC%BB%A4%EC%8A%A4%ED%85%80)
-    - Transactional 심화 추가 예정
+    - [[과제 과정] Transactional (Log에 들어가야 하는 정보,  실무에서의 Log 저장 방법)](https://velog.io/@clvl1004/transactional-%EB%8F%84%EC%A0%84-%EA%B8%B0%EB%8A%A5-%EA%B3%BC%EC%A0%95)
     - EC2 과정 추가 예정
     - RDS 과정 추가 예정
     - S3 과정 추가 예정
